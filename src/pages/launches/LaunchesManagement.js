@@ -1,12 +1,13 @@
 import {useEffect, useState} from "react";
 import Api from "../../services/Api";
-import {Badge, Button, ButtonGroup, Card, Col, Row, Table} from "react-bootstrap";
-import LaunchesTable from "./LaunchesTable";
+import {Button, Card, Col, Row} from "react-bootstrap";
+import InfiniteScroll from "react-infinite-scroll-component";
+import LaunchesCard from "./LaunchesCard";
 
-const limit = 4;
 const labels = ["All", "Past launches", "Upcoming launches"];
 
 const LaunchesManagement = () => {
+    const [limit, setLimit] = useState(4);
     const [active, setActive] = useState(0);
     const [label, setLabel] = useState(labels[0]);
     const [launches, setLaunches] = useState([]);
@@ -30,7 +31,7 @@ const LaunchesManagement = () => {
                 setLaunches(resp.data);
             }).catch(error => console.log('error', error));
         }
-    }, [active]);
+    }, [active, label, limit]);
 
     return (
         <div>
@@ -52,9 +53,12 @@ const LaunchesManagement = () => {
             </Row>
             {launches.length > 0 ? (
                 <Row>
-                    <Col>
-                        <LaunchesTable launches={launches}/>
-                    </Col>
+                    {launches.map((value, index) => (
+                        <Col key={index} className={'d-flex align-items-stretch'} md={3}>
+                            <LaunchesCard launch={value}/>
+                        </Col>
+                    ))}
+                    <InfiniteScroll dataLength={launches.length} next={() => setLimit(limit + 4)} hasMore={true}/>
                 </Row>
             ) : (
                 <Row className={'align-items-center'}>
@@ -64,6 +68,7 @@ const LaunchesManagement = () => {
                                 <Card.Title>
                                     Sorry!
                                 </Card.Title>
+                                <hr/>
                                 <Card.Text>
                                     We can not find data for your request.
                                 </Card.Text>

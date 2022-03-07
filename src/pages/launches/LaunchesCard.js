@@ -3,42 +3,44 @@ import {Badge, Button, Card, Col, Row} from "react-bootstrap";
 const LaunchesCard = ({launch}) => {
     return (
         <Card style={{width: '18rem'}} className={'m-1'}>
-            {launch.links.mission_patch ? (
-                <Card.Img variant="top" src={`${launch.links.mission_patch}`}
-                          style={{maxHeight: '15rem', height: '15rem'}}
-                          className={'p-3'}/>
-            ) : (
-                <Card.Img variant="top"
-                          src="https://pplware.sapo.pt/wp-content/uploads/2021/01/SpaceX-Tesmanian_1600x.jpg"
-                          style={{maxHeight: '15rem', height: '15rem'}}
-                          className={'p-3'}/>
-            )}
+            <Card.Img variant="top"
+                      src={launch.links.mission_patch ? `${launch.links.mission_patch}` : "https://pplware.sapo.pt/wp-content/uploads/2021/01/SpaceX-Tesmanian_1600x.jpg"}
+                      style={{maxHeight: '15rem', height: '15rem'}}
+                      className={'p-3'}/>
             <Card.Header className={'bg-dark text-light'}>
-                <b>
-                    {launch.mission_name} / {launch.launch_year}
+                <b className={'text-uppercase'}>
+                    <small>{launch.mission_name}</small>
                 </b>
             </Card.Header>
             <Card.Body>
-                <Card.Text>
+                <div className={'text-capitalize'}>
                     <Row>
                         <Col md={6}>
-                            <b>Flight Number</b>
+                            <b><small>year</small></b>
                         </Col>
                         <Col md={6}>
-                            {launch.flight_number}
+                            <small>{launch.launch_year}</small>
                         </Col>
                     </Row>
                     <Row>
                         <Col md={6}>
-                            <b>Rocket name</b>
+                            <b><small>Flight Number</small></b>
                         </Col>
                         <Col md={6}>
-                            {launch.rocket.rocket_name}
+                            <small>{launch.flight_number}</small>
                         </Col>
                     </Row>
                     <Row>
                         <Col md={6}>
-                            <b>Success</b>
+                            <b><small>Rocket name</small></b>
+                        </Col>
+                        <Col md={6}>
+                            <small>{launch.rocket.rocket_name}</small>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}>
+                            <b><small>Success</small></b>
                         </Col>
                         <Col md={6}>
                             {launch.launch_success ? (
@@ -47,11 +49,11 @@ const LaunchesCard = ({launch}) => {
                             }
                         </Col>
                     </Row>
-                </Card.Text>
-                <div className="d-grid gap-2">
-                    <Button variant="outline-dark" size="sm">
-                        Read more
-                    </Button>
+                    <div className="d-grid gap-2 mt-2">
+                        <Button variant="outline-dark" size="sm">
+                            Read more
+                        </Button>
+                    </div>
                 </div>
             </Card.Body>
         </Card>

@@ -7,14 +7,14 @@ const url = "https://api.spacexdata.com/v3/";
 
 const Api = {
     launches: {
-        all: function (limit, id, sort) {
-            return axiosClient.get(`${url}launches?limit=${limit}&id=${id}&sort=${sort}`);
+        all: function (limit, id, sort, offset) {
+            return axiosClient.get(`${url}launches?limit=${limit}&id=${id}&sort=${sort}&offset=${offset}`);
         },
-        past: function (limit, id) {
-            return axiosClient.get(`${url}launches/past?limit=${limit}&id=${id}`);
+        past: function (limit, id, sort, offset) {
+            return axiosClient.get(`${url}launches/past?limit=${limit}&id=${id}&sort=${sort}&offset=${offset}`);
         },
-        upcoming: function (limit, id) {
-            return axiosClient.get(`${url}launches/upcoming?limit=${limit}&id=${id}`);
+        upcoming: function (limit, id, sort, offset) {
+            return axiosClient.get(`${url}launches/upcoming?limit=${limit}&id=${id}&sort=${sort}&offset=${offset}`);
         },
     },
 };

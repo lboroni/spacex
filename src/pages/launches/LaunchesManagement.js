@@ -1,16 +1,16 @@
 import {useEffect, useState} from "react";
 import Api from "../../services/Api";
-import {Button, Card, Col, Row} from "react-bootstrap";
-import InfiniteScroll from "react-infinite-scroll-component";
+import {Button, Card, Col, Nav, Row} from "react-bootstrap";
 import LaunchesCard from "./LaunchesCard";
 
 import './style.css';
+import InfiniteScroll from "../../components/InfiniteScroll";
 
 const labels = ["All", "Past launches", "Upcoming launches"];
-const increment = 4;
+const limit = 4;
 
 const LaunchesManagement = () => {
-    const [limit, setLimit] = useState(increment);
+    const [offset, setOffset] = useState(0);
     const [active, setActive] = useState(0);
     const [label, setLabel] = useState(labels[0]);
     const [launches, setLaunches] = useState([]);
@@ -21,25 +21,29 @@ const LaunchesManagement = () => {
         setActive(index);
     }
 
+    function loadMore() {
+        console.log("load" + offset)
+        setOffset(offset + limit);
+    }
+
     useEffect(() => {
-        const lenght = launches.length;
         if (label === labels[0]) {
-            Api.launches.all(limit, true, 'rocket_name', 0).then((resp) => {
-                setLaunches(resp.data);
-                setHasMore((lenght + increment) === resp.data.length);
+            Api.launches.all(limit, true, 'id', offset).then((resp) => {
+                setLaunches(old => [...old, ...resp.data]);
+                setHasMore(resp.data.length > 0);
             }).catch(error => console.log('error', error));
         } else if (label === labels[1]) {
-            Api.launches.past(limit, true, 'id', 0).then((resp) => {
+            Api.launches.past(limit, true, 'id', offset).then((resp) => {
                 setLaunches(resp.data);
-                setHasMore((lenght + increment) === resp.data.length);
+                setHasMore(resp.data.length > 0);
             }).catch(error => console.log('error', error));
         } else {
-            Api.launches.upcoming(limit, true, 'id', 0).then((resp) => {
+            Api.launches.upcoming(limit, true, 'id', offset).then((resp) => {
                 setLaunches(resp.data);
-                setHasMore((lenght + increment) === resp.data.length);
+                setHasMore(resp.data.length > 0);
             }).catch(error => console.log('error', error));
         }
-    }, [active, label, limit]);
+    }, [active, label, offset]);
 
     return (
         <div>
@@ -52,19 +56,24 @@ const LaunchesManagement = () => {
             </Row>
             <Row className={'mb-4'}>
                 <Col>
-                    {labels.map((value, index) => (
-                        <Button key={index} variant="outline-dark" className={active === index ? 'active mx-1' : 'mx-1'}
-                                size={'sm'}
-                                onClick={() => isActive(index, value)}>{value}</Button>
-                    ))}
+                    <Nav>
+                        {labels.map((value, index) => (
+                            <Button key={index} variant="outline-dark"
+                                    className={active === index ? 'active mx-1' : 'mx-1'}
+                                    size={'sm'}
+                                    onClick={() => isActive(index, value)}>{value}</Button>
+                        ))}
+                    </Nav>
                 </Col>
             </Row>
             {launches.length > 0 ? (
-                <div>
-                    <InfiniteScroll dataLength={launches.length}
-                                    next={() => setLimit(limit + increment)}
+                <div className={"div-scroll"}>
+                    <InfiniteScroll loadMore={loadMore}
                                     hasMore={hasMore}
                                     loader={""}
+                                    initialLoad={false}
+                                    threshold={400}
+
                     >
                         <Row>
                             {launches.map((value, index) => (

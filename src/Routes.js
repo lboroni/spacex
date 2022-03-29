@@ -1,13 +1,13 @@
 import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import LaunchesManagement from "./pages/launches/LaunchesManagement";
+import LaunchPage from './pages/launches/LaunchPage';
 
 export default function Routes() {
     return (
-        <BrowserRouter>
-            <Switch>
-                <Route path="/" component={LaunchesManagement}/>
-            </Switch>
-        </BrowserRouter>
+        <Switch>
+            <Route exact path="/" component={LaunchesManagement}/>
+            <Route path="/launch/:id" component={LaunchPage}/>
+        </Switch>
     );
 }

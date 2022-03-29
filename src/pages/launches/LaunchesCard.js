@@ -1,4 +1,5 @@
 import {Badge, Button, Card, Col, Row} from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const LaunchesCard = ({launch}) => {
     return (
@@ -50,9 +51,11 @@ const LaunchesCard = ({launch}) => {
                         </Col>
                     </Row>
                     <div className="d-grid gap-2 mt-2">
-                        <Button variant="outline-dark" size="sm">
-                            Read more
-                        </Button>
+                        <Link to={`/launch/${launch.flight_number}`}>
+                            <Button variant="outline-dark" size="sm" style={{width: '100%'}}>
+                                Read more
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </Card.Body>

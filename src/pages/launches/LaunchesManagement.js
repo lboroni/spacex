@@ -1,10 +1,13 @@
 import {useEffect, useState} from "react";
 import Api from "../../services/Api";
-import {Button, Card, Col, Nav, Row} from "react-bootstrap";
+import {Button, Col, Nav, Row} from "react-bootstrap";
 import LaunchesCard from "./LaunchesCard";
+import NoFoundData from "../../components/NoFoundData";
 
 import './style.css';
 import InfiniteScroll from "../../components/InfiniteScroll";
+import Title from "../../components/Title";
+import Loading from "../../components/Loading";
 
 const labels = ["All", "Past launches", "Upcoming launches"];
 const limit = 4;
@@ -15,6 +18,7 @@ const LaunchesManagement = () => {
     const [label, setLabel] = useState(labels[0]);
     const [launches, setLaunches] = useState([]);
     const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     function isActive(index, label) {
         setLabel(label);
@@ -31,27 +35,29 @@ const LaunchesManagement = () => {
             Api.launches.all(limit, true, 'id', offset).then((resp) => {
                 setLaunches(old => [...old, ...resp.data]);
                 setHasMore(resp.data.length > 0);
+                setLoading(false);
             }).catch(error => console.log('error', error));
         } else if (label === labels[1]) {
             Api.launches.past(limit, true, 'id', offset).then((resp) => {
                 setLaunches(resp.data);
                 setHasMore(resp.data.length > 0);
+                setLoading(false);
             }).catch(error => console.log('error', error));
         } else {
             Api.launches.upcoming(limit, true, 'id', offset).then((resp) => {
                 setLaunches(resp.data);
                 setHasMore(resp.data.length > 0);
+                setLoading(false);
             }).catch(error => console.log('error', error));
         }
     }, [active, label, offset]);
 
+    if (loading) return <Loading />;
     return (
         <div>
             <Row>
                 <Col>
-                    <h2 className={'mb-4'}>
-                        List with all SpaceX launches
-                    </h2>
+                    <Title title="List with all SpaceX launches" className="mb-4" />
                 </Col>
             </Row>
             <Row className={'mb-4'}>
@@ -89,16 +95,7 @@ const LaunchesManagement = () => {
             ) : (
                 <Row className={'align-items-center'}>
                     <Col>
-                        <Card border="dark" style={{width: '100%'}} className={'text-center'}>
-                            <Card.Body>
-                                <Card.Title>
-                                    Sorry!
-                                </Card.Title>
-                                <Card.Text>
-                                    We can not find data for your request.
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
+                        <NoFoundData />
                     </Col>
                 </Row>
             )}

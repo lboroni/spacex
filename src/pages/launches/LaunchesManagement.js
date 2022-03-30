@@ -21,6 +21,8 @@ const LaunchesManagement = () => {
     const [loading, setLoading] = useState(true);
 
     function isActive(index, label) {
+        setOffset(0);
+        setLaunches([]);
         setLabel(label);
         setActive(index);
     }
@@ -39,13 +41,13 @@ const LaunchesManagement = () => {
             }).catch(error => console.log('error', error));
         } else if (label === labels[1]) {
             Api.launches.past(limit, true, 'id', offset).then((resp) => {
-                setLaunches(resp.data);
+                setLaunches(old => [...old, ...resp.data]);
                 setHasMore(resp.data.length > 0);
                 setLoading(false);
             }).catch(error => console.log('error', error));
         } else {
             Api.launches.upcoming(limit, true, 'id', offset).then((resp) => {
-                setLaunches(resp.data);
+                setLaunches(old => [...old, ...resp.data]);
                 setHasMore(resp.data.length > 0);
                 setLoading(false);
             }).catch(error => console.log('error', error));

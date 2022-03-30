@@ -28,7 +28,6 @@ const LaunchesManagement = () => {
     }
 
     function loadMore() {
-        console.log("load" + offset)
         setOffset(offset + limit);
     }
 
@@ -69,7 +68,10 @@ const LaunchesManagement = () => {
                             <Button key={index} variant="outline-dark"
                                     className={active === index ? 'active mx-1' : 'mx-1'}
                                     size={'sm'}
-                                    onClick={() => isActive(index, value)}>{value}</Button>
+                                    onClick={() => {
+                                        isActive(index, value); 
+                                        setLoading(true);
+                                    }}>{value}</Button>
                         ))}
                     </Nav>
                 </Col>

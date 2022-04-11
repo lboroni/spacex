@@ -1,13 +1,14 @@
 import {useEffect, useState} from "react";
 import Api from "../../services/Api";
+import LaunchFactory from "../../LaunchFactory";
 import {Button, Col, Nav, Row} from "react-bootstrap";
 import LaunchesCard from "./LaunchesCard";
 import NoFoundData from "../../components/NoFoundData";
-
-import './style.css';
-import InfiniteScroll from "../../components/InfiniteScroll";
 import Title from "../../components/Title";
 import Loading from "../../components/Loading";
+import InfiniteScroll from "../../components/InfiniteScroll";
+
+import './style.css';
 
 const labels = ["All", "Past launches", "Upcoming launches"];
 const limit = 4;
@@ -20,6 +21,12 @@ const LaunchesManagement = () => {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
 
+    function buildPage(data, more, load) {
+        setLaunches(data);
+        setHasMore(more);
+        setLoading(load);
+    }
+
     function isActive(index, label) {
         setOffset(0);
         setLaunches([]);
@@ -28,28 +35,25 @@ const LaunchesManagement = () => {
     }
 
     function loadMore() {
-        setOffset(offset + limit);
+        //setOffset(offset + limit);
     }
 
     useEffect(() => {
         if (label === labels[0]) {
             Api.launches.all(limit, true, 'id', offset).then((resp) => {
-                setLaunches(old => [...old, ...resp.data]);
-                setHasMore(resp.data.length > 0);
-                setLoading(false);
-            }).catch(error => console.log('error', error));
+                const data = resp.data.map(launch => LaunchFactory.builder(launch));
+                buildPage(old => [...old, ...data], data.length > 0, false);
+            }).catch(error => Api.error.default(error));
         } else if (label === labels[1]) {
             Api.launches.past(limit, true, 'id', offset).then((resp) => {
-                setLaunches(old => [...old, ...resp.data]);
-                setHasMore(resp.data.length > 0);
-                setLoading(false);
-            }).catch(error => console.log('error', error));
+                const data = resp.data.map(launch => LaunchFactory.builder(launch));
+                buildPage(old => [...old, ...data], data.length > 0, false);
+            }).catch(error => Api.error.default(error));
         } else {
             Api.launches.upcoming(limit, true, 'id', offset).then((resp) => {
-                setLaunches(old => [...old, ...resp.data]);
-                setHasMore(resp.data.length > 0);
-                setLoading(false);
-            }).catch(error => console.log('error', error));
+                const data = resp.data.map(launch => LaunchFactory.builder(launch));
+                buildPage(old => [...old, ...data], data.length > 0, false);
+            }).catch(error => Api.error.default(error));
         }
     }, [active, label, offset]);
 

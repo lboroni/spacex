@@ -52,7 +52,7 @@ const LaunchesCard = ({launch}) => {
                         </Col>
                     </Row>
                     <div className="d-grid gap-2 mt-2">
-                        <ButtonLink link={`/launch/${launch.flight_number}`} text="Read more" style={{width: '100%'}}/>
+                        <ButtonLink link={`/launch/${launch.id}`} text="Read more" style={{width: '100%'}}/>
                     </div>
                 </div>
             </Card.Body>

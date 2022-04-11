@@ -8,18 +8,23 @@ import ButtonLink from '../../components/ButtonLink';
 import Loading from '../../components/Loading';
 import NoFoundData from "../../components/NoFoundData";
 import moment from 'moment';
+import LaunchFactory from "../../LaunchFactory";
 
 const LaunchPage = ({match}) => {
 
   const [launch, setLaunch] = useState();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    Api.launches.getByID(match.params.id).then((resp) => {
-      setLaunch(resp.data[0]);
-      setLoading(false);
-    }).catch(error => console.log('error', error));
-  }, [match]);
+    function buildPage(data, load) {
+        setLaunch(data);
+        setLoading(load);
+    }
+
+    useEffect(() => {
+        Api.launches.getByID(match.params.id).then((resp) => {
+            buildPage(LaunchFactory.builder(resp.data), false);
+        }).catch(error => Api.error.default(error));
+    }, [match]);
 
   if (loading) return <Loading />;
   return (

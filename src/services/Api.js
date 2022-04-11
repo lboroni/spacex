@@ -21,7 +21,8 @@ const Api = {
             return await resp;
         },
         getByID: async function (id) {
-            const resp = axiosClient.get(`${url}launches/${id}`);
+            const resp = axiosClient.get((Api.version.toLowerCase() === "v4") ? `${url}launches/${id}` :
+                `${url}launches?flight_number=${id}`);
             return await resp;
         },
     },

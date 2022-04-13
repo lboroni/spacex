@@ -1,13 +1,5 @@
 import Api from "./services/Api";
 
-function getRocket(id) {
-    let rocket = {name: ""};
-    Api.rockets.getByID(id).then(resp => {
-        rocket = resp.data;
-    }).catch(error => Api.error.default(error));
-    return rocket;
-}
-
 const LaunchFactory = {
     builder(data) {
         let launch = {
@@ -18,20 +10,17 @@ const LaunchFactory = {
             launch_date_utc: data.launch_date_utc,
             launch_success: data.launch_success,
             launch_failure_details: data.launch_failure_details,
-            rocket: {
-                rocket_name: data.rocket.rocket_name,
-            },
+            rocket: data.rocket,
             links: {
                 mission_patch: data.links.mission_patch,
                 video_link: data.links.video_link,
                 wikipedia: data.links.wikipedia
             },
-            details: data.details
+            details: data.details,
+            upcoming: data.upcoming
         };
 
         if (Api.version.toLowerCase() === "v4") {
-            const rocket = getRocket(data.rocket);
-
             launch.id = data.id
             launch.mission_name = data.name;
             launch.launch_success = data.success;
@@ -40,8 +29,6 @@ const LaunchFactory = {
             launch.launch_date_utc = data.date_utc;
             launch.links.mission_patch = data.links.patch.small;
             launch.links.video_link = data.links.webcast;
-            launch.rocket.rocket_name = rocket.name;
-
         }
 
         return launch;

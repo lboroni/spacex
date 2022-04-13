@@ -1,5 +1,5 @@
 import {Badge, Button, Card, Col, Row} from "react-bootstrap";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import ButtonLink from "../../components/ButtonLink";
 
 const LaunchesCard = ({launch}) => {
@@ -18,14 +18,6 @@ const LaunchesCard = ({launch}) => {
                 <div className={'text-capitalize'}>
                     <Row>
                         <Col md={6}>
-                            <b><small>year</small></b>
-                        </Col>
-                        <Col md={6}>
-                            <small>{launch.launch_year}</small>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}>
                             <b><small>Flight Number</small></b>
                         </Col>
                         <Col md={6}>
@@ -34,23 +26,32 @@ const LaunchesCard = ({launch}) => {
                     </Row>
                     <Row>
                         <Col md={6}>
-                            <b><small>Rocket name</small></b>
+                            <b><small>year</small></b>
                         </Col>
                         <Col md={6}>
-                            <small>{launch.rocket.rocket_name}</small>
+                            <small>{launch.launch_year}</small>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col md={6}>
-                            <b><small>Success</small></b>
-                        </Col>
-                        <Col md={6}>
-                            {launch.launch_success ? (
-                                <Badge bg="success">Success</Badge>) : (
-                                <Badge bg="danger">Failure</Badge>)
-                            }
-                        </Col>
-                    </Row>
+                    {launch.upcoming ? (
+                        <Row>
+                            <Col md={6}>
+                                <b><small>Upcoming</small></b>
+                            </Col>
+                            <Col md={6}>
+                                <Badge bg="success">True</Badge>
+                            </Col>
+                        </Row>) : (
+                        <Row>
+                            <Col md={6}>
+                                <b><small>Success</small></b>
+                            </Col>
+                            <Col md={6}>
+                                {launch.launch_success ? (
+                                    <Badge bg="success">Success</Badge>) : (
+                                    <Badge bg="danger">Failure</Badge>)
+                                }
+                            </Col>
+                        </Row>)}
                     <div className="d-grid gap-2 mt-2">
                         <ButtonLink link={`/launch/${launch.id}`} text="Read more" style={{width: '100%'}}/>
                     </div>
